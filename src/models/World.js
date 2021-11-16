@@ -1,35 +1,41 @@
 'use strict'
 
-const { Model, Sequelize } = require('sequelize');
-const sequelize = require('../database/connectionFactory');
+const { Model } = require('sequelize');
 
 class World extends Model {
-    static associate(models) { }
-};
-
-World.init({
-    id: {
-        type: Sequelize.DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
-    },
-    name: {
-        type: Sequelize.DataTypes.STRING(30),
-        unique: true,
-        allowNull: false,
-    },
-    created_at: {
-        type: Sequelize.DataTypes.DATE,
-        allowNull: false
-    },
-    updated_at: {
-        type: Sequelize.DataTypes.DATE,
-        allowNull: false
+    static associate(models) {
+        this.hasOne(models.WorldConfig, {
+            foreignKey: 'world_id',
+            as: 'config'
+        });
     }
-}, {
-    sequelize,
-    modelName: 'World',
-    tableName: 'world'
-});
+
+    static init(sequelize, DataTypes) {
+        super.init({
+            id: {
+                type: DataTypes.INTEGER,
+                primaryKey: true,
+                autoIncrement: true,
+            },
+            name: {
+                type: DataTypes.STRING(30),
+                unique: true,
+                allowNull: false,
+            },
+            created_at: {
+                type: DataTypes.DATE,
+                allowNull: false
+            },
+            updated_at: {
+                type: DataTypes.DATE,
+                allowNull: false
+            }
+        }, {
+            sequelize,
+            modelName: 'World',
+            tableName: 'world'
+        });
+    }
+}
 
 module.exports = World;

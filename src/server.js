@@ -6,6 +6,8 @@ const app = express();
 app.use(express.json());
 app.use('/api', routes);
 
+require('./database/connectionFactory');
+
 app.listen(port, host, (error) => {
     if (error) 
         console.log(error);
