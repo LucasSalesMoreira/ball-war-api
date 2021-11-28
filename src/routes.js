@@ -1,7 +1,6 @@
 const routes = require('express').Router();
 const path = require('path');
 
-const { redirect } = require('express/lib/response');
 // Controllers
 const UserController = require('./controllers/UserController');
 const WorldController = require('./controllers/WorldController');

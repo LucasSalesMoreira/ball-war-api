@@ -3,11 +3,12 @@ function init() {
     canvas.style.width = `${document.body.clientWidth - 50}px`;
     canvas.style.height = `${document.body.clientHeight - 50}px`;
     const ctx = canvas.getContext('2d');
-    return { ctx, canvasW: canvas.width, canvasH: canvas.height };
+    const connection = new Socket('http://192.168.1.66:3001');
+    return { ctx, canvasW: canvas.width, canvasH: canvas.height, connection };
 }
 
 function gameLoop(config) {
-    const { ctx, canvasW, canvasH } = config;
+    const { ctx, canvasW, canvasH, connection } = config;
     const gameSpeed = 30;
     const actions = {
         direction: null,
@@ -30,6 +31,7 @@ function gameLoop(config) {
         * Enviar via webSocket o objeto actions para informar a api as inteções do player
         */
         
+        connection.sendTest();
     });
 
     /*

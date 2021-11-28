@@ -1,3 +1,4 @@
+require('./database/connectionFactory');
 const express = require('express');
 const path = require('path');
 const { port, host } = require('./configs/config');
@@ -8,9 +9,10 @@ app.use(express.json());
 app.use('/api', routes);
 app.use(express.static(path.resolve(path.join(__dirname, 'static/'))));
 
-require('./database/connectionFactory');
+const httpServer = require('http').createServer(app);
+require('./ioEvents')(require('socket.io')(httpServer));
 
-app.listen(port, host, (error) => {
+httpServer.listen(port, host, error => {
     if (error) 
         console.log(error);
     else
