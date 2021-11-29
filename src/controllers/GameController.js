@@ -6,10 +6,6 @@ module.exports = {
         socket.join(roomName);
         await io.to(roomName).emit('NEW_PLAYER_IN_WORLD');
     },
-    async start(io, client) {
-
-    },
-    async finish(io, client) {
-
-    }
+    async start(io, client) {},
+    async finish(io, client) {}
 };
