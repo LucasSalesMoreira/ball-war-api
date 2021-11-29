@@ -14,8 +14,6 @@ routes.get('/world/get_all', WorldController.getAll);
 routes.get('/world/get/:id', WorldController.get);
 routes.post('/world/create', WorldController.add);
 
-routes.get('/game-tests', async (req, res) => {
-    res.sendFile(path.resolve('src/static/game.html'));
-});
+routes.get('/game-tests/:id', WorldController.index);
 
 module.exports = routes;
