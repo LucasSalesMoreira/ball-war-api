@@ -30,8 +30,6 @@ function gameLoop(config) {
         /*
         * Enviar via webSocket o objeto actions para informar a api as inteções do player
         */
-        
-        connection.sendTest();
     });
 
     /*
@@ -47,6 +45,7 @@ function gameLoop(config) {
         window.requestAnimationFrame(loop);
     }
 
+    connection.enterGame();
     loop();
 }
 
