@@ -2,8 +2,25 @@ const World = require('../models/World');
 const WorldConfig = require('../models/WorldConfig');
 const validators = require('../validators/worldValidator');
 const yup = require('yup');
+const path = require('path');
 
 module.exports = {
+    async index(req, res) {
+        const schema = yup.object().shape(validators.getValidator);
+        const { id } = await schema.validate(req.params);
+        const world = await World.findOne({
+            include: [{ model: WorldConfig, as: 'config' }],
+            where: { id }
+        });
+
+        // Verificar se o mundo é público
+        if (!world.config.code) {
+            res.sendFile(path.resolve('src/static/game.html'));
+        } else {
+            return res.status(400).json({ private: true });
+        }
+    },
+
     async getAll(req, res) {
         try {
             const worlds = await World.findAll({
