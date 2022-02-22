@@ -14,4 +14,10 @@ class Socket {
         const worldId = window.location.href.split('/')[5];
         await this.socket.emit('TO_ENTER', { worldId });
     }
+
+    async closed() {
+        this.socket.on('CLOSED', () => {
+            alert('Esta sala está cheia!');
+        });
+    }
 }

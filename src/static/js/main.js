@@ -46,6 +46,7 @@ function gameLoop(config) {
     }
 
     connection.enterGame();
+    connection.closed();
     loop();
 }
 
