@@ -4,5 +4,5 @@ module.exports = (io) => io.on('connection', socket => {
 
     socket.on('TO_ENTER', async (data) => await GameController.enter(io, { socket, data }));
     
-    socket.on('disconnect', () => console.log(`Client disconnected: ID -> ${socket.id}`));
+    socket.on('disconnect', async () => await GameController.exit(io, { socket }));
 });

@@ -11,19 +11,27 @@ function filterResponseArray(response) {
     return responseArray;
 }
 
+function removePlayer(roomName, indexPlayer) {
+    let worldId = roomName.split('-')[1];
+    globalStatus[worldId].playersArray.splice(indexPlayer, 1);
+    numberOfPlayers[worldId].size--;
+    globalStatus[worldId].size = numberOfPlayers[worldId].size;
+    console.log(globalStatus[worldId]);
+}
+
 module.exports = {
     async enter(io, client) {
         const { socket, data } = client;
         const { worldId } = data;
+        const roomName = `#room-${worldId}`;
 
         try { 
             numberOfPlayers[worldId].size; 
         } catch (err) {
-            numberOfPlayers[worldId] = { size: 0 };
+            numberOfPlayers[worldId] = { roomName, size: 0 };
         }
 
         if (numberOfPlayers[worldId].size < 4) {
-            const roomName = `#room-${worldId}`;
             socket.join(roomName);
 
             let playerObjectTemplate = {
@@ -39,11 +47,11 @@ module.exports = {
                 }
             };
 
-            numberOfPlayers[worldId].size += 1;
-            console.log(numberOfPlayers);
+            numberOfPlayers[worldId].size++;
 
             if (numberOfPlayers[worldId].size === 1) {
                 globalStatus[worldId] = {
+                    roomName,
                     size: numberOfPlayers[worldId].size,
                     playersArray: [playerObjectTemplate]
                 };
@@ -52,10 +60,11 @@ module.exports = {
                 globalStatus[worldId].playersArray.push(playerObjectTemplate);
             }
 
+            console.log(globalStatus[worldId].size);
             await io.to(roomName).emit('NEW_PLAYER_IN_WORLD', filterResponseArray(globalStatus[worldId].playersArray));
         
         } else {
-            socket.emit('CLOSED'); // Tratar no front-end!
+            await socket.emit('CLOSED'); // Tratar no front-end!
             console.log(globalStatus[worldId]);
             console.log('CLOSED');
         }
@@ -64,6 +73,29 @@ module.exports = {
     async start(io, client) {
         
     },
+    
     async finish(io, client) { },
-    async exit(io, client) { }
+    
+    async exit(io, client) {
+        let { socket } = client;
+        let isFound = false;
+        for (room of globalStatus) {
+            let indexPlayer = 0;
+            if (room !== undefined) {
+                for (player of room.playersArray) {
+                    if (player.id === socket.id) {
+                        isFound = true;
+                        break;
+                    }
+                    indexPlayer++;
+                }
+                if (isFound) {
+                    removePlayer(room.roomName, indexPlayer);
+                    await io.to(room.roomName).emit('EXIT_PLAYER');
+                    break;
+                }
+            }
+        }
+        console.log(`Client disconnected: ID -> ${socket.id}`);
+    }
 }; 
