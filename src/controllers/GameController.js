@@ -2,6 +2,15 @@ let numberOfPlayers = [];
 
 let globalStatus = [];
 
+function filterResponseArray(response) {
+    let responseArray = [];
+    response.forEach((item) => {
+        let { id, gameObject } = item;
+        responseArray.push({ id, gameObject });
+    });
+    return responseArray;
+}
+
 module.exports = {
     async enter(io, client) {
         const { socket, data } = client;
@@ -42,8 +51,8 @@ module.exports = {
                 globalStatus[worldId].size = numberOfPlayers[worldId].size;
                 globalStatus[worldId].playersArray.push(playerObjectTemplate);
             }
-            
-            await io.to(roomName).emit('NEW_PLAYER_IN_WORLD');
+
+            await io.to(roomName).emit('NEW_PLAYER_IN_WORLD', filterResponseArray(globalStatus[worldId].playersArray));
         
         } else {
             socket.emit('CLOSED'); // Tratar no front-end!
@@ -51,8 +60,10 @@ module.exports = {
             console.log('CLOSED');
         }
     },
-
-    async start(io, client) { },
+    
+    async start(io, client) {
+        
+    },
     async finish(io, client) { },
     async exit(io, client) { }
-};
+}; 

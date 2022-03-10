@@ -5,8 +5,9 @@ class Socket {
     }
 
     async init() {
-        this.socket.on('NEW_PLAYER_IN_WORLD', () => {
+        this.socket.on('NEW_PLAYER_IN_WORLD', (playersArray) => {
             alert('Novo jogador entrou!');
+            console.log(playersArray);
         });
     }
 
