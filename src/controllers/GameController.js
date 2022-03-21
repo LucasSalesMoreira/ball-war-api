@@ -19,6 +19,13 @@ function removePlayer(roomName, indexPlayer) {
     console.log(globalStatus[worldId]);
 }
 
+function sortColor() {
+    let r = Math.floor(Math.random() * 255);
+    let g = Math.floor(Math.random() * 255);
+    let b = Math.floor(Math.random() * 255);
+    return `rgb(${r}, ${g}, ${b})`;
+}
+
 module.exports = {
     async enter(io, client) {
         const { socket, data } = client;
@@ -32,14 +39,14 @@ module.exports = {
         }
 
         if (numberOfPlayers[worldId].size < 4) {
-            socket.join(roomName);
-
+            socket.join(roomName);        
             let playerObjectTemplate = {
                 id: socket.id,
                 socket,
                 gameObject: {
-                    x: 0,
-                    y: 0,
+                    x: Math.floor(Math.random() * 200) + 10,
+                    y: Math.floor(Math.random() * 100) + 10,
+                    color: sortColor(),
                     shot: {
                         x: null,
                         y: null
@@ -72,6 +79,11 @@ module.exports = {
     
     async start(io, client) {
         
+    },
+
+    async action(io, client) {
+        let { socket, data } = client;
+        console.log(data);
     },
     
     async finish(io, client) { },

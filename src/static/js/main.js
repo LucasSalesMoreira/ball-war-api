@@ -1,3 +1,5 @@
+var testGlobalVariable = [];
+
 function init() {
     const canvas = document.getElementById('game-screen');
     canvas.style.width = `${document.body.clientWidth - 50}px`;
@@ -22,26 +24,26 @@ function gameLoop(config) {
         ctx.clearRect(0, 0, canvasW, canvasH);
     }
 
-    document.addEventListener('keydown', function(event) {
+    document.addEventListener('keyup', function(event) {
         const key = event.key;
-        if (key === 'w' || key === 's' || key === 'a' || key === 'd')
+        if (key === 'w' || key === 's' || key === 'a' || key === 'd') {
             actions.direction = key;
-        
-        /*
-        * Enviar via webSocket o objeto actions para informar a api as inteções do player
-        */
+            connection.sendAction(actions);
+        }
     });
 
-    /*
-    const intervalId = setInterval(function() { 
-        
-    }, gameSpeed);*/
+
+    // const intervalId = setInterval(() => { 
+    //     connection.sendAction(actions);
+    // }, gameSpeed);
 
     function loop () {
-        clear();
-        
-        new Player({ x: 10, y: 10, color: '#064c66', actions }, ctx).render();
-        
+        clear();    
+        testGlobalVariable.forEach(player => {
+            let { x, y, color } = player.gameObject;
+            //document.getElementsByTagName('body').style.background = color;
+            new Player({ x, y, color, action: null }).render(ctx);
+        });
         window.requestAnimationFrame(loop);
     }
 
