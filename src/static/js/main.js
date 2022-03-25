@@ -14,6 +14,8 @@ function gameLoop(config) {
     const gameSpeed = 10;
     const actions = {
         direction: null,
+        canvasW,
+        canvasH,
         shot: {
             x: null,
             y: null

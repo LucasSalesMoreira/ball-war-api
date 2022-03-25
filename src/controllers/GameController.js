@@ -93,6 +93,7 @@ module.exports = {
                 let x = globalStatus[worldId].playersArray[index].gameObject.x;
                 let y = globalStatus[worldId].playersArray[index].gameObject.y;
                 const speed = 1;
+
                 switch (action.direction) {
                     case 'a':
                         x -= speed;
@@ -107,6 +108,11 @@ module.exports = {
                         y += speed;
                         break;
                 }
+
+                if (x >= action.canvasW) x = action.canvasW;
+                if (y >= action.canvasH) y = action.canvasH;
+                if (x <= 0) x = 0;
+                if (y <= 0) y = 0;
 
                 globalStatus[worldId].playersArray[index].gameObject.x = x;
                 globalStatus[worldId].playersArray[index].gameObject.y = y;
