@@ -11,7 +11,7 @@ function init() {
 
 function gameLoop(config) {
     const { ctx, canvasW, canvasH, connection } = config;
-    const gameSpeed = 30;
+    const gameSpeed = 10;
     const actions = {
         direction: null,
         shot: {
@@ -28,14 +28,13 @@ function gameLoop(config) {
         const key = event.key;
         if (key === 'w' || key === 's' || key === 'a' || key === 'd') {
             actions.direction = key;
-            connection.sendAction(actions);
         }
     });
 
 
-    // const intervalId = setInterval(() => { 
-    //     connection.sendAction(actions);
-    // }, gameSpeed);
+    const intervalId = setInterval(() => { 
+        connection.sendAction(actions);
+    }, gameSpeed);
 
     function loop () {
         clear();    
@@ -48,6 +47,7 @@ function gameLoop(config) {
     }
 
     connection.enterGame();
+    connection.readActions();
     connection.closed();
     loop();
 }

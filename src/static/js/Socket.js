@@ -21,6 +21,12 @@ class Socket {
         this.socket.emit('ACTION', { worldId: this.worldId, action })
     }
 
+    readActions() {
+        this.socket.on('ACTION', (playersArray) => {
+            testGlobalVariable = playersArray;
+        });
+    }
+
     closed() {
         this.socket.on('CLOSED', () => {
             alert('Esta sala está cheia!');

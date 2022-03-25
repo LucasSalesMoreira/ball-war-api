@@ -26,6 +26,8 @@ function sortColor() {
     return `rgb(${r}, ${g}, ${b})`;
 }
 
+function getRoomName(worldId) { return `#room-${worldId}`; }
+
 module.exports = {
     async enter(io, client) {
         const { socket, data } = client;
@@ -83,7 +85,35 @@ module.exports = {
 
     async action(io, client) {
         let { socket, data } = client;
-        console.log(data);
+        let { worldId, action } = data;
+        let playerId = socket.id;
+        
+        globalStatus[worldId].playersArray.forEach((player, index) => {
+            if (playerId === player.id) {
+                let x = globalStatus[worldId].playersArray[index].gameObject.x;
+                let y = globalStatus[worldId].playersArray[index].gameObject.y;
+                const speed = 1;
+                switch (action.direction) {
+                    case 'a':
+                        x -= speed;
+                        break;
+                    case 'd':
+                        x += speed;
+                        break;
+                    case 'w':
+                        y -= speed;
+                        break;
+                    case 's':
+                        y += speed;
+                        break;
+                }
+
+                globalStatus[worldId].playersArray[index].gameObject.x = x;
+                globalStatus[worldId].playersArray[index].gameObject.y = y;
+
+                io.to(getRoomName(worldId)).emit('ACTION', filterResponseArray(globalStatus[worldId].playersArray));
+            }
+        });
     },
     
     async finish(io, client) { },
